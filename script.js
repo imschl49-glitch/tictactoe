@@ -10,6 +10,7 @@ const createRoomBtn = document.getElementById('createRoom');
 const joinRoomBtn = document.getElementById('joinRoom');
 const roomCodeInput = document.getElementById('roomCode');
 const leaveRoomBtn = document.getElementById('leaveRoom');
+const reconnectBtn = document.getElementById('reconnect');
 const roomInfoEl = document.getElementById('roomInfo');
 const roleBadgeEl = document.getElementById('roleBadge');
 
@@ -17,6 +18,23 @@ let ws;
 let roomCode = null;
 let role = null;
 let state = null;
+
+let reconnectTimer;
+
+function getLastRoomCode() {
+  const raw = sessionStorage.getItem('tictactoe_last_room');
+  if (!raw) return null;
+  const code = raw.trim().toUpperCase();
+  return code ? code : null;
+}
+
+function setLastRoomCode(code) {
+  if (!code) {
+    sessionStorage.removeItem('tictactoe_last_room');
+    return;
+  }
+  sessionStorage.setItem('tictactoe_last_room', String(code).trim().toUpperCase());
+}
 
 function setStatus(text) {
   statusEl.textContent = text;
@@ -160,6 +178,10 @@ function setRoomUi() {
   joinRoomBtn.disabled = connected;
   roomCodeInput.disabled = connected;
 
+  if (reconnectBtn) {
+    reconnectBtn.disabled = Boolean(ws && ws.readyState === WebSocket.OPEN);
+  }
+
   if (!connected) {
     roomInfoEl.textContent = 'Not connected';
     roleBadgeEl.textContent = '';
@@ -175,10 +197,31 @@ function setRoomUi() {
 }
 
 function connect() {
+  if (reconnectTimer) {
+    clearTimeout(reconnectTimer);
+    reconnectTimer = undefined;
+  }
+
+  if (ws && (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN)) {
+    try {
+      ws.close();
+    } catch {
+    }
+  }
+
   const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
   ws = new WebSocket(`${protocol}://${location.host}`);
 
   ws.addEventListener('open', () => {
+    setRoomUi();
+
+    const last = getLastRoomCode();
+    if (last && !roomCode) {
+      ws.send(JSON.stringify({ type: 'join_room', roomCode: last }));
+      setStatus(`Connected. Rejoining room ${last}...`);
+      return;
+    }
+
     setStatus('Connected. Create or join a room');
   });
 
@@ -188,7 +231,11 @@ function connect() {
     state = null;
     chatMessages = [];
     setRoomUi();
-    setStatus('Disconnected. Refresh to reconnect');
+    setStatus('Disconnected. Tap Reconnect');
+
+    reconnectTimer = setTimeout(() => {
+      connect();
+    }, 1500);
   });
 
   ws.addEventListener('message', (ev) => {
@@ -205,6 +252,7 @@ function connect() {
     if (msg.type === 'room_created' || msg.type === 'room_joined') {
       roomCode = msg.roomCode;
       role = msg.role;
+      setLastRoomCode(roomCode);
       setRoomUi();
       return;
     }
@@ -259,8 +307,15 @@ leaveRoomBtn.addEventListener('click', () => {
   role = null;
   state = null;
   chatMessages = [];
+  setLastRoomCode(null);
   setRoomUi();
 });
+
+if (reconnectBtn) {
+  reconnectBtn.addEventListener('click', () => {
+    connect();
+  });
+}
 
 setRoomUi();
 connect();

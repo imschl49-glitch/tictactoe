@@ -19,6 +19,10 @@ body {
   height: 100%;
 }
 
+html {
+  background: var(--bg);
+}
+
 body {
   margin: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
@@ -29,7 +33,11 @@ body {
     linear-gradient(180deg, #070a14, #0b1020);
   display: grid;
   place-items: center;
-  padding: 28px;
+  padding: calc(28px + env(safe-area-inset-top))
+    calc(28px + env(safe-area-inset-right))
+    calc(28px + env(safe-area-inset-bottom))
+    calc(28px + env(safe-area-inset-left));
+  background-color: var(--bg);
 }
 
 .app {
@@ -77,6 +85,12 @@ body {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.lobby-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
 }
 
 .lobby-join {

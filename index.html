@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>Tic Tac Toe</title>
     <meta name="theme-color" content="#0b1020" />
     <link rel="manifest" href="./manifest.webmanifest" />
@@ -45,7 +45,10 @@
         </div>
         <div class="lobby-row lobby-meta">
           <span id="roomInfo" class="room-info">Not connected</span>
-          <button id="leaveRoom" class="lobby-link" type="button" disabled>Leave</button>
+          <div class="lobby-actions">
+            <button id="reconnect" class="lobby-link" type="button">Reconnect</button>
+            <button id="leaveRoom" class="lobby-link" type="button" disabled>Leave</button>
+          </div>
         </div>
       </section>
 
