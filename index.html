@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1 class="title">Tic Tac Toe</h1>
+        <p id="status" class="status" aria-live="polite"></p>
+      </header>
+
+      <section class="lobby" aria-label="Multiplayer lobby">
+        <div class="lobby-row">
+          <button id="createRoom" class="lobby-btn" type="button">New room</button>
+          <div class="lobby-join">
+            <label class="sr-only" for="roomCode">Room code</label>
+            <input id="roomCode" class="lobby-input" type="text" placeholder="Room code" maxlength="8" />
+            <button id="joinRoom" class="lobby-btn" type="button">Join</button>
+          </div>
+        </div>
+        <div class="lobby-row lobby-meta">
+          <span id="roomInfo" class="room-info">Not connected</span>
+          <button id="leaveRoom" class="lobby-link" type="button" disabled>Leave</button>
+        </div>
+      </section>
+
+      <section class="content" aria-label="Game and chat">
+        <section class="board" role="grid" aria-label="Tic Tac Toe board">
+          <button class="cell" type="button" role="gridcell" aria-label="Row 1 Column 1" data-index="0"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 1 Column 2" data-index="1"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 1 Column 3" data-index="2"></button>
+
+          <button class="cell" type="button" role="gridcell" aria-label="Row 2 Column 1" data-index="3"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 2 Column 2" data-index="4"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 2 Column 3" data-index="5"></button>
+
+          <button class="cell" type="button" role="gridcell" aria-label="Row 3 Column 1" data-index="6"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 3 Column 2" data-index="7"></button>
+          <button class="cell" type="button" role="gridcell" aria-label="Row 3 Column 3" data-index="8"></button>
+        </section>
+
+        <aside class="chat" aria-label="Chat">
+          <div class="chat-header">
+            <h2 class="chat-title">Chat</h2>
+            <span id="roleBadge" class="role-badge" aria-label="Your role"></span>
+          </div>
+          <ul id="chatMessages" class="chat-messages" aria-label="Messages"></ul>
+          <form id="chatForm" class="chat-form" autocomplete="off">
+            <label class="sr-only" for="chatInput">Message</label>
+            <input id="chatInput" class="chat-input" type="text" placeholder="Type a message..." maxlength="200" />
+            <button id="chatSend" class="chat-send" type="submit">Send</button>
+          </form>
+        </aside>
+      </section>
+
+      <footer class="footer">
+        <button id="restart" class="restart" type="button">Restart</button>
+      </footer>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
