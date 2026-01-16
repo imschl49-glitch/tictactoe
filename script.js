@@ -150,7 +150,7 @@ function sendChatMessage() {
 
   ws.send(JSON.stringify({ type: 'chat', text: text.slice(0, 200) }));
   chatInput.value = '';
-  chatInput.focus();
+  chatInput.blur();
 }
 
 if (chatForm) {
